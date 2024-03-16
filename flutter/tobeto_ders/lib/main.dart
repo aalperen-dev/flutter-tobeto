@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tobeto_ders/questions.dart';
+import 'package:tobeto_ders/screens/question_screen.dart';
 
 void main() {
   runApp(const MyApp());
