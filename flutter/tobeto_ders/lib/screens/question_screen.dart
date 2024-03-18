@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:tobeto_ders/data/question_data.dart';
 import 'package:tobeto_ders/screens/result_screen.dart';
 
@@ -63,10 +64,12 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 questions[indexStart].question,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontSize: 20,
                 ),
               ),
             ),
             //
+
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
               child: ListView.builder(
@@ -82,6 +85,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           indexStart,
                           index,
                         ];
+                        // indexStart++;
                       });
                     },
                     child: Text(
@@ -91,48 +95,50 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                 },
               ),
             ),
-            indexStart <= questions.length - 2
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            indexStart--;
-                          });
-                        },
-                        child: const Text(
-                          "Önceki Soru",
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            indexStart++;
-                          });
-                        },
-                        child: const Text(
-                          "Sonraki Soru",
-                        ),
-                      ),
-                    ],
-                  )
-                : ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ResultScreen(
-                          quizAnswers: quizAnswers,
-                          studentAnswers: studentAnswers,
-                        ),
-                      ));
-                    },
-                    child: const Text('Sonuç Ekranı!'),
+
+            //
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      indexStart--;
+                    });
+                  },
+                  child: const Text(
+                    "Önceki Soru",
                   ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      indexStart++;
+                    });
+                  },
+                  child: const Text(
+                    "Sonraki Soru",
+                  ),
+                ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ResultScreen(
+                    quizAnswers: quizAnswers,
+                    studentAnswers: studentAnswers,
+                  ),
+                ));
+              },
+              child: const Text('Sonuç Ekranı!'),
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          print(quizAnswers);
           print(studentAnswers);
         },
         child: const Icon(

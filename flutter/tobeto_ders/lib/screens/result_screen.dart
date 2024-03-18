@@ -44,6 +44,8 @@ class _ResultScreenState extends State<ResultScreen> {
         onPressed: () {
           print(widget.quizAnswers);
           print(widget.studentAnswers);
+
+          correctAnswerCount();
           setState(() {});
         },
       ),
