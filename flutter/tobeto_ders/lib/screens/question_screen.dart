@@ -14,7 +14,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   int indexStart = 0;
   int correctAnswerCount = 0;
   List quizAnswers = [];
-  List studentAnswers = List.filled(questions.length, []);
+  List studentAnswers = List.filled(questions.length, [98, 99]);
 
   @override
   void initState() {
@@ -60,18 +60,20 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             Container(
               height: MediaQuery.of(context).size.height * 0.2,
               padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                questions[indexStart].question,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+              child: Center(
+                child: Text(
+                  questions[indexStart].question,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
                 ),
               ),
             ),
             //
 
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.5,
+              height: MediaQuery.of(context).size.height * 0.4,
               child: ListView.builder(
                 itemCount: questions[indexStart].answers.length,
                 itemBuilder: (context, index) {
@@ -85,7 +87,9 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                           indexStart,
                           index,
                         ];
-                        // indexStart++;
+                        if (indexStart < questions.length - 1) {
+                          indexStart++;
+                        }
                       });
                     },
                     child: Text(
@@ -100,50 +104,46 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      indexStart--;
-                    });
-                  },
-                  child: const Text(
-                    "Önceki Soru",
+                if (indexStart > 0 && indexStart <= questions.length)
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        indexStart--;
+                      });
+                    },
+                    child: const Text(
+                      "Önceki Soru",
+                    ),
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      indexStart++;
-                    });
-                  },
-                  child: const Text(
-                    "Sonraki Soru",
+                if (indexStart >= 0 && indexStart < questions.length - 1)
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        indexStart++;
+                      });
+                    },
+                    child: const Text(
+                      "Sonraki Soru",
+                    ),
                   ),
-                ),
+                //
+                if (indexStart == questions.length - 1)
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (context) => ResultScreen(
+                            quizAnswers: quizAnswers,
+                            studentAnswers: studentAnswers,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text('Sonuç Ekranı!'),
+                  ),
               ],
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ResultScreen(
-                    quizAnswers: quizAnswers,
-                    studentAnswers: studentAnswers,
-                  ),
-                ));
-              },
-              child: const Text('Sonuç Ekranı!'),
-            ),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(quizAnswers);
-          print(studentAnswers);
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.black,
         ),
       ),
     );

@@ -15,39 +15,61 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  int correctAnswers = 0;
+  List correctAnsweredQuestions = [];
+  List wrongAnsweredQuestions = [];
+  String correctAnsweredQuestionsString = '';
+  String wrongAnsweredQuestionsString = '';
 
   @override
   void initState() {
-    correctAnswerCount();
+    answerSeperator();
+    correctAnsweredQuestionsString = answersString(correctAnsweredQuestions);
+    wrongAnsweredQuestionsString = answersString(wrongAnsweredQuestions);
     super.initState();
   }
 
-  void correctAnswerCount() {
+  void answerSeperator() {
     for (var i = 0; i < widget.quizAnswers.length; i++) {
       if (widget.quizAnswers[i][1] == widget.studentAnswers[i][1]) {
-        setState(() {
-          correctAnswers++;
-        });
+        correctAnsweredQuestions.add(widget.quizAnswers[i]);
+      } else {
+        wrongAnsweredQuestions.add(widget.quizAnswers[i]);
       }
     }
+  }
+
+  String answersString(List answers) {
+    String retVal = '';
+    for (var i = 0; i < answers.length; i++) {
+      retVal += '${(answers[i][0] as int) + 1} ';
+    }
+    return retVal;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${correctAnswers}'),
+        centerTitle: true,
+        title: const Text('Quiz Results'),
       ),
-      body: Container(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          print(widget.quizAnswers);
-          print(widget.studentAnswers);
-
-          correctAnswerCount();
-          setState(() {});
-        },
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              const Text('---Sınav Sonucu---'),
+              Text('Toplam Soru : ${widget.quizAnswers.length}'),
+              Text('Doğru Cevap Sayısı : ${correctAnsweredQuestions.length}'),
+              Text(
+                  'Doğru Cevaplanan Sorular : $correctAnsweredQuestionsString'),
+              Text(
+                  'Yanlış/Boş Cevap Sayısı : ${wrongAnsweredQuestions.length}'),
+              Text(
+                  'Yanlış/Boş Cevaplanan Sorular : $wrongAnsweredQuestionsString'),
+            ],
+          ),
+        ),
       ),
     );
   }
