@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/custom_info_widget.dart';
+
 class ResultScreen extends StatefulWidget {
   final List quizAnswers;
   final List studentAnswers;
@@ -23,8 +25,8 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     answerSeperator();
-    correctAnsweredQuestionsString = answersString(correctAnsweredQuestions);
-    wrongAnsweredQuestionsString = answersString(wrongAnsweredQuestions);
+    correctAnsweredQuestionsString = answersToString(correctAnsweredQuestions);
+    wrongAnsweredQuestionsString = answersToString(wrongAnsweredQuestions);
     super.initState();
   }
 
@@ -38,7 +40,7 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
-  String answersString(List answers) {
+  String answersToString(List answers) {
     String retVal = '';
     for (var i = 0; i < answers.length; i++) {
       retVal += '${(answers[i][0] as int) + 1} ';
@@ -58,15 +60,32 @@ class _ResultScreenState extends State<ResultScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const Text('---Sınav Sonucu---'),
-              Text('Toplam Soru : ${widget.quizAnswers.length}'),
-              Text('Doğru Cevap Sayısı : ${correctAnsweredQuestions.length}'),
-              Text(
-                  'Doğru Cevaplanan Sorular : $correctAnsweredQuestionsString'),
-              Text(
-                  'Yanlış/Boş Cevap Sayısı : ${wrongAnsweredQuestions.length}'),
-              Text(
-                  'Yanlış/Boş Cevaplanan Sorular : $wrongAnsweredQuestionsString'),
+              const Text(
+                '⚠️ Sınav Sonucu ⚠️',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              CustomInfoText(
+                  infoText: 'Toplam Soru :',
+                  infoDetail: '${widget.quizAnswers.length}'),
+              CustomInfoText(
+                  infoText: 'Doğru Cevap Sayısı :',
+                  infoDetail: '${correctAnsweredQuestions.length}'),
+              CustomInfoText(
+                  infoText: 'Doğru Cevaplanan Sorular :',
+                  infoDetail: correctAnsweredQuestions.isEmpty
+                      ? 'Bütün cevaplar yanlış! 😡'
+                      : correctAnsweredQuestionsString),
+              CustomInfoText(
+                  infoText: 'Yanlış/Boş Cevap Sayısı :',
+                  infoDetail: ' ${wrongAnsweredQuestions.length}'),
+              CustomInfoText(
+                  infoText: 'Yanlış/Boş Cevaplanan Sorular : ',
+                  infoDetail: wrongAnsweredQuestions.isEmpty
+                      ? 'Bütün cevaplar doğru! 🥳'
+                      : wrongAnsweredQuestionsString)
             ],
           ),
         ),

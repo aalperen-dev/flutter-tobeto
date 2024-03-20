@@ -54,8 +54,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.min,
+          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.2,
@@ -73,7 +73,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
             //
 
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
+              height: MediaQuery.of(context).size.height * 0.5,
               child: ListView.builder(
                 itemCount: questions[indexStart].answers.length,
                 itemBuilder: (context, index) {
@@ -94,6 +94,10 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
                     },
                     child: Text(
                       questions[indexStart].answers[index].answerText,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
                   );
                 },
@@ -105,25 +109,30 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 if (indexStart > 0 && indexStart <= questions.length)
-                  ElevatedButton(
+                  ElevatedButton.icon(
+                    icon: const Icon(Icons.arrow_back),
                     onPressed: () {
                       setState(() {
                         indexStart--;
                       });
                     },
-                    child: const Text(
+                    label: const Text(
                       "Önceki Soru",
                     ),
                   ),
                 if (indexStart >= 0 && indexStart < questions.length - 1)
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        indexStart++;
-                      });
-                    },
-                    child: const Text(
-                      "Sonraki Soru",
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        setState(() {
+                          indexStart++;
+                        });
+                      },
+                      label: const Text(
+                        "Sonraki Soru",
+                      ),
                     ),
                   ),
                 //
