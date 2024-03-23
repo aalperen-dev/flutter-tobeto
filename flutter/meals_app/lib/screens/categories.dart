@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/screens/sayfab.dart';
 
 import '../widgets/category_card.dart';
 
@@ -26,6 +27,25 @@ class CategoriesScreen extends StatelessWidget {
           CategoryCard(),
           CategoryCard(),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigator.of(context).pop();
+
+          // // Basit bir push kullanım örneği
+          // Navigator.of(context).push(
+          //   MaterialPageRoute(
+          //     builder: (context) => const PageB(),
+          //   ),
+          // );
+
+          // Basit bir pushReplacement kullanım örneği
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const PageB(),
+            ),
+          );
+        },
       ),
     );
   }

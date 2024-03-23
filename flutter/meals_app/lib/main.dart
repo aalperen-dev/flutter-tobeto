@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Meals App',
       theme: theme,
-      home: CategoriesScreen(),
+      home: const CategoriesScreen(),
     );
   }
 }
