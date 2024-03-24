@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
+  final String name;
   const CategoryCard({
     super.key,
+    required this.name,
   });
 
   @override
@@ -24,7 +26,7 @@ class CategoryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         padding: const EdgeInsets.all(16),
-        child: const Text('Kategori 1'),
+        child: Text(name),
       ),
     );
   }

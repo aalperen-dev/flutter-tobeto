@@ -48,7 +48,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 20),
             child: Text('Soru: ${indexStart + 1} / ${questions.length}'),
-          )
+          ),
         ],
       ),
       body: Padding(
