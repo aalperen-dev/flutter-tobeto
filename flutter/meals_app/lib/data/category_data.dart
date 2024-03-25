@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_guid/flutter_guid.dart';
 import 'package:meals_app/models/category_model.dart';
 
-var categories = [
+// guid paket
+
+final categories = [
   CategoryModel(
-    id: '1',
-    name: 'araba',
-    color: Colors.black,
+    id: Guid.generate(),
+    name: 'Kategori 1',
+    color: Colors.purple,
   ),
   CategoryModel(
-    id: '2',
-    name: 'motor',
-    color: Colors.black,
+    id: Guid.generate(),
+    name: 'Kategori 2',
+    color: Colors.red,
   ),
   CategoryModel(
-    id: '3',
-    name: 'pc',
-    color: Colors.black,
+    id: Guid.generate(),
+    name: 'Kategori 3',
+    color: Colors.blue,
   ),
   CategoryModel(
-    id: '4',
-    name: 'laptop',
-    color: Colors.black,
+    id: Guid.generate(),
+    name: 'Kategori 4',
+    color: Colors.yellow,
   ),
   CategoryModel(
-    id: '5',
-    name: 'monitör',
-    color: Colors.black,
+    id: Guid.generate(),
+    name: 'Kategori 5',
+    color: Colors.green,
   ),
 ];
