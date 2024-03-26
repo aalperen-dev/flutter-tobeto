@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_guid/flutter_guid.dart';
 
 class CategoryModel {
-  final Guid id;
+  final String id;
   final String name;
   final Color color;
 

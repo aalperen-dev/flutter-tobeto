@@ -16,7 +16,11 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap, //Sadece dışarıyı haberdar et
+      // onTap: () {
+      //   onTap(); // Dışarıyı haberdar et
+      //   // Varsa diğer işlemleri yürüt.
+      // },
       child: Container(
         // height: 10,
         // width: 20,

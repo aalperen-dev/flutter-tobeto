@@ -6,27 +6,27 @@ import 'package:meals_app/models/category_model.dart';
 
 final categories = [
   CategoryModel(
-    id: Guid.generate(),
+    id: Guid.generate().toString(),
     name: 'Kategori 1',
     color: Colors.purple,
   ),
   CategoryModel(
-    id: Guid.generate(),
+    id: '1',
     name: 'Kategori 2',
     color: Colors.red,
   ),
   CategoryModel(
-    id: Guid.generate(),
+    id: Guid.generate().toString(),
     name: 'Kategori 3',
     color: Colors.blue,
   ),
   CategoryModel(
-    id: Guid.generate(),
+    id: Guid.generate().toString(),
     name: 'Kategori 4',
     color: Colors.yellow,
   ),
   CategoryModel(
-    id: Guid.generate(),
+    id: Guid.generate().toString(),
     name: 'Kategori 5',
     color: Colors.green,
   ),
