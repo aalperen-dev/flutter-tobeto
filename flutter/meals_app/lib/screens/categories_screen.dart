@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meals_app/data/category_data.dart';
 import 'package:meals_app/models/category_model.dart';
+import 'package:meals_app/screens/favourites_screen.dart';
 import 'package:meals_app/screens/meals_screen.dart';
 import '../widgets/category_card.dart';
 
@@ -28,7 +29,13 @@ class CategoriesScreen extends StatelessWidget {
         title: const Text('Kategoriler'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FavouritesScreen(),
+                ),
+              );
+            },
             icon: const Icon(
               Icons.favorite_outline_outlined,
             ),
@@ -56,14 +63,14 @@ class CategoriesScreen extends StatelessWidget {
                     categoryModel: categoryList[index],
                     onTap: () {
                       print('id: ${categoryList[index].id}');
-                      // _changeScreen(categoryList[index], context);
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => MealsScreen(
-                            categoryModel: categoryList[index],
-                          ),
-                        ),
-                      );
+                      _changeScreen(categoryList[index], context);
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => MealsScreen(
+                      //       categoryModel: categoryList[index],
+                      //     ),
+                      //   ),
+                      // );
                     },
                   );
                 },
