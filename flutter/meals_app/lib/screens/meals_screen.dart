@@ -28,7 +28,7 @@ class MealsScreen extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => MealDeatailsScreen(
+              builder: (context) => MealDetailsScreen(
                 mealModel: mealList[index],
               ),
             ),
@@ -51,7 +51,7 @@ class MealsScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => FavouritesScreen(),
+                  builder: (context) => const FavouritesScreen(),
                 ),
               );
             },

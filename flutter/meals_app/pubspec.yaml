@@ -37,6 +37,7 @@ dependencies:
   flutter_guid: ^0.3.1
   transparent_image: ^2.0.1
   flutter_rating_bar: ^4.0.1
+  flutter_riverpod: ^2.5.1
 
 dev_dependencies:
   flutter_test:

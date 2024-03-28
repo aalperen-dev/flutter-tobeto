@@ -1,32 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal_model.dart';
-import 'package:meals_app/screens/favourites_screen.dart';
+import 'package:meals_app/providers/favourites_provider.dart';
 
-class MealDeatailsScreen extends StatelessWidget {
+class MealDetailsScreen extends ConsumerStatefulWidget {
   final MealModel mealModel;
-  const MealDeatailsScreen({
+  const MealDetailsScreen({
     super.key,
     required this.mealModel,
   });
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MealDetailsScreenState();
+}
 
+class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    //
+    final favourites = ref.watch(favouriteMealsProvider);
+    //
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('${mealModel.name} tarifi.'),
+        title: Text('${widget.mealModel.name} tarifi.'),
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const FavouritesScreen(),
-                ),
-              );
+              ref
+                  .read(favouriteMealsProvider.notifier)
+                  .toggleMealFavourite(widget.mealModel);
+
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (context) => const FavouritesScreen(),
+              //   ),
+              // );
             },
-            icon: const Icon(
-              Icons.favorite_outline_outlined,
+            icon: Icon(
+              favourites.contains(widget.mealModel)
+                  ? Icons.favorite
+                  : Icons.favorite_outline_outlined,
             ),
           ),
         ],
@@ -41,15 +56,15 @@ class MealDeatailsScreen extends StatelessWidget {
           children: [
             Center(
               child: Hero(
-                tag: mealModel.id,
+                tag: widget.mealModel.id,
                 child: SizedBox(
                   height: 250,
                   width: 250,
-                  child: Image.network(mealModel.imageUrl),
+                  child: Image.network(widget.mealModel.imageUrl),
                 ),
               ),
             ),
-            Text(mealModel.desc),
+            Text(widget.mealModel.desc),
             // ListView.builder(
             //   itemCount: mealModel.ingredients.length,
             //   itemBuilder: (context, index) {},
@@ -60,7 +75,7 @@ class MealDeatailsScreen extends StatelessWidget {
                 vertical: 10,
               ),
               child: RatingBarIndicator(
-                rating: mealModel.rating,
+                rating: widget.mealModel.rating,
                 itemBuilder: (context, index) => const Icon(
                   Icons.star,
                   color: Colors.amber,
