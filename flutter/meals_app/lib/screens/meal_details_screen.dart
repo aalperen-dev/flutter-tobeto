@@ -3,6 +3,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meals_app/models/meal_model.dart';
 import 'package:meals_app/providers/favourites_provider.dart';
+import 'package:meals_app/screens/favourites_screen.dart';
 
 class MealDetailsScreen extends ConsumerStatefulWidget {
   final MealModel mealModel;
@@ -28,15 +29,11 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              ref
-                  .read(favouriteMealsProvider.notifier)
-                  .toggleMealFavourite(widget.mealModel);
-
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => const FavouritesScreen(),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const FavouritesScreen(),
+                ),
+              );
             },
             icon: Icon(
               favourites.contains(widget.mealModel)
@@ -86,7 +83,11 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          ref
+              .read(favouriteMealsProvider.notifier)
+              .toggleMealFavourite(widget.mealModel);
+        },
         child: const Icon(Icons.favorite),
       ),
     );
