@@ -42,6 +42,14 @@ class _FavouritesScreenState extends ConsumerState<FavouritesScreen> {
                 ),
               ),
             );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => MealDetailsScreen(
+            //       mealModel: favourites[index],
+            //     ),
+            //   ),
+            // );
           },
         ),
       ),
