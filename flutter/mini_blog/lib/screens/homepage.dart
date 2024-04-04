@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:mini_blog/themes/dark_theme.dart';
-import 'package:mini_blog/themes/light_theme.dart';
+import 'package:mini_blog/screens/add_blog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,32 +43,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Title'),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('text'),
-              Switch(
-                value: themeMode == ThemeMode.dark,
-                onChanged: (value) {
-                  _changeTheme(value);
-                },
-              )
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Title'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const AddBlogScreen(),
+              ));
+            },
+            icon: const Icon(Icons.abc),
           ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('text'),
+            Switch(
+              value: themeMode == ThemeMode.dark,
+              onChanged: (value) {
+                _changeTheme(value);
+              },
+            )
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
     );
   }
