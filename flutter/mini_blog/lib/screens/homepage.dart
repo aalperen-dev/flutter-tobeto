@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/add_blog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert' as convert;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,40 +14,44 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   ThemeMode themeMode = ThemeMode.light;
 
-  @override
-  void initState() {
-    super.initState();
-    _readThemeData();
-  }
+  // void _changeTheme(bool value) {
+  //   setState(() {
+  //     themeMode = value ? ThemeMode.dark : ThemeMode.light;
+  //     _writeThemeData(value);
+  //   });
+  // }
 
-  void _readThemeData() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bool? isDark = preferences.getBool('DarkTheme');
+  // void _writeThemeData(bool value) async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   preferences.setBool('DarkTheme', value);
+  // }
 
-    if (isDark != null && isDark) {
-      setState(() {
-        themeMode = ThemeMode.dark;
-      });
+  final List<BlogModel> dataFromApi = [];
+
+  Future<void> _getPosts() async {
+    Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
+
+    http.Response response = await http.get(url);
+
+    List? jsonReponse;
+
+    if (response.statusCode == 200) {
+      jsonReponse = convert.jsonDecode(response.body);
+      print(jsonReponse);
+    } else {
+      print('hata kodu : ${response.statusCode}');
     }
-  }
 
-  void _changeTheme(bool value) {
-    setState(() {
-      themeMode = value ? ThemeMode.dark : ThemeMode.light;
-      _writeThemeData(value);
-    });
-  }
-
-  void _writeThemeData(bool value) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool('DarkTheme', value);
+    for (var element in jsonReponse!) {
+      dataFromApi.add(BlogModel.fromMap(element));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Title'),
+        title: const Text('Ana Sayfa'),
         actions: [
           IconButton(
             onPressed: () {
@@ -53,26 +59,40 @@ class _HomePageState extends State<HomePage> {
                 builder: (context) => const AddBlogScreen(),
               ));
             },
-            icon: const Icon(Icons.abc),
+            icon: const Icon(
+              Icons.add,
+            ),
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('text'),
-            Switch(
-              value: themeMode == ThemeMode.dark,
-              onChanged: (value) {
-                _changeTheme(value);
-              },
+      body: dataFromApi.isEmpty
+          ? const Center(
+              child: Text('Data Yok!'),
             )
-          ],
-        ),
-      ),
+          : ListView.builder(
+              itemCount: dataFromApi.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: Image.network(
+                  dataFromApi[index].thumbnail!,
+                  width: 50,
+                ),
+                title: Text(dataFromApi[index].title!),
+                subtitle: Column(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(dataFromApi[index].author!),
+                    Text(dataFromApi[index].content!),
+                  ],
+                ),
+              ),
+            ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          await _getPosts();
+          setState(() {});
+          print('deneme ${dataFromApi[0]}');
+        },
         child: const Icon(Icons.add),
       ),
     );
