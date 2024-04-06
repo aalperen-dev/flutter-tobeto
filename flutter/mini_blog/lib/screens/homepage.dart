@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ThemeMode themeMode = ThemeMode.light;
-
+  final List<BlogModel> dataFromApi = [];
   // void _changeTheme(bool value) {
   //   setState(() {
   //     themeMode = value ? ThemeMode.dark : ThemeMode.light;
@@ -26,25 +26,41 @@ class _HomePageState extends State<HomePage> {
   //   preferences.setBool('DarkTheme', value);
   // }
 
-  final List<BlogModel> dataFromApi = [];
+  // Future<void> _getPosts() async {
+  //   Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
 
-  Future<void> _getPosts() async {
+  //   http.Response response = await http.get(url);
+
+  //   List? jsonReponse;
+
+  //   if (response.statusCode == 200) {
+  //     jsonReponse = convert.jsonDecode(response.body);
+  //     print(jsonReponse);
+  //   } else {
+  //     print('hata kodu : ${response.statusCode}');
+  //   }
+
+  //   for (var element in jsonReponse!) {
+  //     dataFromApi.add(BlogModel.fromMap(element));
+  //   }
+  // }
+
+  Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
-
     http.Response response = await http.get(url);
 
-    List? jsonReponse;
-
+    List? jsonResponse;
     if (response.statusCode == 200) {
-      jsonReponse = convert.jsonDecode(response.body);
-      print(jsonReponse);
+      jsonResponse = convert.jsonDecode(response.body);
     } else {
       print('hata kodu : ${response.statusCode}');
     }
 
-    for (var element in jsonReponse!) {
+    for (var element in jsonResponse!) {
       dataFromApi.add(BlogModel.fromMap(element));
     }
+
+    return dataFromApi;
   }
 
   @override
@@ -55,9 +71,11 @@ class _HomePageState extends State<HomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const AddBlogScreen(),
-              ));
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const AddBlogScreen(),
+                ),
+              );
             },
             icon: const Icon(
               Icons.add,
@@ -65,33 +83,62 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: dataFromApi.isEmpty
-          ? const Center(
-              child: Text('Data Yok!'),
-            )
-          : ListView.builder(
-              itemCount: dataFromApi.length,
-              itemBuilder: (context, index) => ListTile(
-                leading: Image.network(
-                  dataFromApi[index].thumbnail!,
-                  width: 50,
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: FutureBuilder(
+          future: _getRequest(),
+          builder: (context, snapshot) {
+            if (snapshot.data == null) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              // print(snapshot.data);
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) => ListTile(
+                  leading: Image.network(
+                    snapshot.data![index].thumbnail!,
+                    width: 50,
+                  ),
+                  title: Text(snapshot.data![index].title!),
+                  subtitle: Column(
+                    // mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(snapshot.data![index].author!),
+                      Text(snapshot.data![index].content!),
+                    ],
+                  ),
                 ),
-                title: Text(dataFromApi[index].title!),
-                subtitle: Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(dataFromApi[index].author!),
-                    Text(dataFromApi[index].content!),
-                  ],
-                ),
-              ),
-            ),
+              );
+            }
+          },
+        ),
+      ),
+      // ListView.builder(
+      //   itemCount: dataFromApi.length,
+      //   itemBuilder: (context, index) => ListTile(
+      //     leading: Image.network(
+      //       dataFromApi[index].thumbnail!,
+      //       width: 50,
+      //     ),
+      //     title: Text(dataFromApi[index].title!),
+      //     subtitle: Column(
+      //       // mainAxisAlignment: MainAxisAlignment.start,
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       children: [
+      //         Text(dataFromApi[index].author!),
+      //         Text(dataFromApi[index].content!),
+      //       ],
+      //     ),
+      //   ),
+      // ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await _getPosts();
-          setState(() {});
-          print('deneme ${dataFromApi[0]}');
+          // await _getPosts();
+          // setState(() {});
+          // print('deneme ${dataFromApi[0]}');
         },
         child: const Icon(Icons.add),
       ),

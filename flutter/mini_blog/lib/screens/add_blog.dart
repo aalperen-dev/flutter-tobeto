@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -25,8 +23,8 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
   //
   Future<void> _submit(BuildContext context) async {
-    print(blogTitle);
-    print(blogContent);
+    // print(blogTitle);
+    // print(blogContent);
 
     if (selectedImage != null) {
       Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
@@ -58,7 +56,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
     final imagePicker = ImagePicker();
 
     XFile? file = await imagePicker.pickImage(
-      source: ImageSource.camera,
+      source: ImageSource.gallery,
     );
 
     setState(() {
@@ -108,7 +106,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     return null;
                   },
                   onSaved: (newValue) {
-                    print(newValue);
+                    // print(newValue);
                     blogTitle = newValue!;
                   },
                 ),
@@ -126,7 +124,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     return null;
                   },
                   onSaved: (newValue) {
-                    print(newValue);
+                    // print(newValue);
                     blogContent = newValue!;
                   },
                 ),
@@ -142,7 +140,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                     return null;
                   },
                   onSaved: (newValue) {
-                    print(newValue);
+                    // print(newValue);
                     author = newValue!;
                   },
                 ),
