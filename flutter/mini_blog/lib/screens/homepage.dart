@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ThemeMode themeMode = ThemeMode.light;
-  final List<BlogModel> dataFromApi = [];
+
   // void _changeTheme(bool value) {
   //   setState(() {
   //     themeMode = value ? ThemeMode.dark : ThemeMode.light;
@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
     http.Response response = await http.get(url);
+    final List<BlogModel> dataFromApi = [];
 
     List? jsonResponse;
     if (response.statusCode == 200) {
@@ -107,7 +108,12 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(snapshot.data![index].author!),
-                      Text(snapshot.data![index].content!),
+                      Text(
+                        snapshot.data![index].content!,
+                        style: const TextStyle(
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
                     ],
                   ),
                 ),

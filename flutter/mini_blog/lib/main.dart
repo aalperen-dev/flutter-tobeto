@@ -45,3 +45,8 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+
+// TODO: stream builder bakıcaz
+// TODO: pull to refresh bakıcaz
+// TODO: detail sayfası yapabiliriz
+// TODO: adaptive widget işlevi

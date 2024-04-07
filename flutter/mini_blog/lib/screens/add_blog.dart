@@ -21,7 +21,8 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   String author = '';
   XFile? selectedImage;
 
-  //
+  // TextEditingController controller = TextEditingController();
+
   Future<void> _submit(BuildContext context) async {
     // print(blogTitle);
     // print(blogContent);
@@ -95,6 +96,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                   ),
                 // başlık
                 TextFormField(
+                  // controller: controller,
                   decoration: const InputDecoration(
                     label: Text('Başlık - Title'),
                   ),
@@ -158,6 +160,11 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
             ),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // print(controller.text);
+        },
       ),
     );
   }

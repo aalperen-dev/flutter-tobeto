@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class BlogModel {
   String? id;
   String? title;
@@ -48,36 +46,5 @@ class BlogModel {
       thumbnail: map['thumbnail'],
       author: map['author'],
     );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory BlogModel.fromJson(String source) =>
-      BlogModel.fromMap(json.decode(source));
-
-  @override
-  String toString() {
-    return 'BlogModel(id: $id, title: $title, content: $content, thumbnail: $thumbnail, author: $author)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is BlogModel &&
-        other.id == id &&
-        other.title == title &&
-        other.content == content &&
-        other.thumbnail == thumbnail &&
-        other.author == author;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^
-        title.hashCode ^
-        content.hashCode ^
-        thumbnail.hashCode ^
-        author.hashCode;
   }
 }
