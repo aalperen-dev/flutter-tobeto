@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
   Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
     http.Response response = await http.get(url);
+
     final List<BlogModel> dataFromApi = [];
 
     List? jsonResponse;
