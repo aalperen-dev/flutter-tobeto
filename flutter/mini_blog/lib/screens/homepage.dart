@@ -4,6 +4,8 @@ import 'package:mini_blog/screens/add_blog.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import 'package:mini_blog/screens/blog_details_screen.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,43 +28,32 @@ class _HomePageState extends State<HomePage> {
   //   preferences.setBool('DarkTheme', value);
   // }
 
-  // Future<void> _getPosts() async {
-  //   Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
+  late Future<List<BlogModel>> dataFromApi;
 
-  //   http.Response response = await http.get(url);
+  @override
+  void initState() {
+    super.initState();
 
-  //   List? jsonReponse;
-
-  //   if (response.statusCode == 200) {
-  //     jsonReponse = convert.jsonDecode(response.body);
-  //     print(jsonReponse);
-  //   } else {
-  //     print('hata kodu : ${response.statusCode}');
-  //   }
-
-  //   for (var element in jsonReponse!) {
-  //     dataFromApi.add(BlogModel.fromMap(element));
-  //   }
-  // }
+    dataFromApi = _getRequest();
+  }
 
   Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
     http.Response response = await http.get(url);
 
-    final List<BlogModel> dataFromApi = [];
-
-    List? jsonResponse;
     if (response.statusCode == 200) {
-      jsonResponse = convert.jsonDecode(response.body);
+      List jsonResponse = convert.jsonDecode(response.body);
+      return jsonResponse.map((e) => BlogModel.fromMap(e)).toList();
     } else {
       print('hata kodu : ${response.statusCode}');
+      throw Exception('hata!');
     }
 
-    for (var element in jsonResponse!) {
-      dataFromApi.add(BlogModel.fromMap(element));
-    }
+    // for (var element in jsonResponse!) {
+    //   dataFromApi.add(BlogModel.fromMap(element));
+    // }
 
-    return dataFromApi;
+    // return dataFromApi;
   }
 
   @override
@@ -87,40 +78,55 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        child: FutureBuilder(
-          future: _getRequest(),
-          builder: (context, snapshot) {
-            if (snapshot.data == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              // print(snapshot.data);
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) => ListTile(
-                  leading: Image.network(
-                    snapshot.data![index].thumbnail!,
-                    width: 50,
-                  ),
-                  title: Text(snapshot.data![index].title!),
-                  subtitle: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(snapshot.data![index].author!),
-                      Text(
-                        snapshot.data![index].content!,
-                        style: const TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
+        child: RefreshIndicator(
+          onRefresh: () {
+            setState(() {});
+            return _getRequest();
           },
+          child: FutureBuilder(
+            future: _getRequest(),
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                // print(snapshot.data);
+                return ListView.builder(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => ListTile(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => BlogDetailsScreen(
+                              blogModel: snapshot.data![index]),
+                        ),
+                      );
+                    },
+                    leading: Image.network(
+                      snapshot.data![index].thumbnail!,
+                      width: 50,
+                    ),
+                    title: Text(snapshot.data![index].title!),
+                    subtitle: Column(
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(snapshot.data![index].author!),
+                        Text(
+                          snapshot.data![index].content!,
+                          style: const TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ),
       ),
       // ListView.builder(
