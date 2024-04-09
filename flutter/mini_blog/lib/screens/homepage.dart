@@ -105,17 +105,17 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     leading: Image.network(
-                      snapshot.data![index].thumbnail!,
+                      snapshot.data![index].thumbnail,
                       width: 50,
                     ),
-                    title: Text(snapshot.data![index].title!),
+                    title: Text(snapshot.data![index].title),
                     subtitle: Column(
                       // mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(snapshot.data![index].author!),
+                        Text(snapshot.data![index].author),
                         Text(
-                          snapshot.data![index].content!,
+                          snapshot.data![index].content,
                           style: const TextStyle(
                             overflow: TextOverflow.ellipsis,
                           ),
