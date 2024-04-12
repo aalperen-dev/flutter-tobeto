@@ -28,14 +28,14 @@ class _HomePageState extends State<HomePage> {
   //   preferences.setBool('DarkTheme', value);
   // }
 
-  late Future<List<BlogModel>> dataFromApi;
+  // late Future<List<BlogModel>> dataFromApi;
 
-  @override
-  void initState() {
-    super.initState();
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    dataFromApi = _getRequest();
-  }
+  //   dataFromApi = _getRequest();
+  // }
 
   Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");

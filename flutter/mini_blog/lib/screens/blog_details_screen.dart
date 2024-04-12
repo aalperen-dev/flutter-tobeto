@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_blog/models/blog_model.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
 
 class BlogDetailsScreen extends StatefulWidget {
   final BlogModel blogModel;
