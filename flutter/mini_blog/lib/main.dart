@@ -50,3 +50,5 @@ class _MyAppState extends State<MyApp> {
 // TODO: pull to refresh bakıcaz
 // TODO: detail sayfası yapabiliriz
 // TODO: adaptive widget işlevi
+// TODO: hocaya sorulcak edit
+// TODO: hocaya sorulcak save

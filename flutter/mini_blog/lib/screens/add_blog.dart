@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:mini_blog/screens/homepage.dart';
 
 class AddBlogScreen extends StatefulWidget {
   const AddBlogScreen({super.key});
@@ -46,7 +47,9 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
       if (response.statusCode == 201) {
         if (!context.mounted) return;
-        Navigator.of(context).pop();
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ));
       }
 
       // http.Response response = await http.post(url);

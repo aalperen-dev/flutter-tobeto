@@ -30,20 +30,16 @@ class _HomePageState extends State<HomePage> {
 
   // late Future<List<BlogModel>> dataFromApi;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   dataFromApi = _getRequest();
-  // }
-
   Future<List<BlogModel>> _getRequest() async {
     Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
     http.Response response = await http.get(url);
 
     if (response.statusCode == 200) {
       List jsonResponse = convert.jsonDecode(response.body);
-      return jsonResponse.map((e) => BlogModel.fromMap(e)).toList();
+      List<BlogModel> reversedList =
+          jsonResponse.map((e) => BlogModel.fromMap(e)).toList();
+
+      return reversedList.reversed.toList();
     } else {
       print('hata kodu : ${response.statusCode}');
       throw Exception('hata!');
@@ -54,6 +50,12 @@ class _HomePageState extends State<HomePage> {
     // }
 
     // return dataFromApi;
+  }
+
+  @override
+  void initState() {
+    _getRequest();
+    super.initState();
   }
 
   @override
@@ -88,7 +90,7 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               if (snapshot.data == null) {
                 return const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 );
               } else {
                 // print(snapshot.data);
@@ -116,6 +118,7 @@ class _HomePageState extends State<HomePage> {
                         Text(snapshot.data![index].author),
                         Text(
                           snapshot.data![index].content,
+                          // maxLines: 3,
                           style: const TextStyle(
                             overflow: TextOverflow.ellipsis,
                           ),
