@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 class BlogModel {
-  final String id;
+  String? id;
   final String title;
   final String content;
   final String thumbnail;
   final String author;
   BlogModel({
-    required this.id,
+    this.id,
     required this.title,
     required this.content,
     required this.thumbnail,

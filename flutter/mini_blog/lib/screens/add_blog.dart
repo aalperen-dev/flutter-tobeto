@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/homepage.dart';
 
 class AddBlogScreen extends StatefulWidget {
@@ -16,18 +18,13 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   // key tanımlama
   final _formKey = GlobalKey<FormState>();
 
-  //
+  // değişkenler
   String blogTitle = '';
   String blogContent = '';
-  String author = '';
+  String blogAuthor = '';
   XFile? selectedImage;
 
-  // TextEditingController controller = TextEditingController();
-
   Future<void> _submit(BuildContext context) async {
-    // print(blogTitle);
-    // print(blogContent);
-
     if (selectedImage != null) {
       Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
 
@@ -35,7 +32,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       // içerik ekleme
       request.fields['Title'] = blogTitle;
       request.fields['Content'] = blogContent;
-      request.fields['Author'] = author;
+      request.fields['Author'] = blogAuthor;
 
       // dosya ekleme
       final file =
@@ -47,15 +44,52 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
       if (response.statusCode == 201) {
         if (!context.mounted) return;
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
       }
-
-      // http.Response response = await http.post(url);
     }
   }
 
+  // 400 hatası veriyor. request body türü yok.
+  Future<void> _submitTest(
+    BuildContext context,
+    BlogModel blogModel,
+  ) async {
+    Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: blogModel.toMap(),
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print('Başarılı!!!');
+      }
+      if (context.mounted) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Post Güncellendi!'),
+          ),
+        );
+      }
+    } else {
+      if (kDebugMode) {
+        print('Hata Kodu : ${response.statusCode}');
+      }
+    }
+  }
+
+  // resim seçme
   Future<void> _pickImage() async {
     final imagePicker = ImagePicker();
 
@@ -146,7 +180,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
                   },
                   onSaved: (newValue) {
                     // print(newValue);
-                    author = newValue!;
+                    blogAuthor = newValue!;
                   },
                 ),
                 const SizedBox(height: 10),
@@ -165,9 +199,20 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // print(controller.text);
+        onPressed: () async {
+          // deneme
+          if (selectedImage != null) {
+            BlogModel postTest = BlogModel(
+              title: blogTitle,
+              content: blogContent,
+              thumbnail: selectedImage!.path,
+              author: blogAuthor,
+            );
+
+            await _submitTest(context, postTest);
+          }
         },
+        child: const Icon(Icons.warning),
       ),
     );
   }

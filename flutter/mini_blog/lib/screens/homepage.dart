@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/add_blog.dart';
@@ -41,7 +42,9 @@ class _HomePageState extends State<HomePage> {
 
       return reversedList.reversed.toList();
     } else {
-      print('hata kodu : ${response.statusCode}');
+      if (kDebugMode) {
+        print('hata kodu : ${response.statusCode}');
+      }
       throw Exception('hata!');
     }
 
@@ -150,14 +153,14 @@ class _HomePageState extends State<HomePage> {
       //     ),
       //   ),
       // ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // await _getPosts();
-          // setState(() {});
-          // print('deneme ${dataFromApi[0]}');
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     // await _getPosts();
+      //     // setState(() {});
+      //     // print('deneme ${dataFromApi[0]}');
+      //   },
+      //   child: const Icon(Icons.add),
+      // ),
     );
   }
 }
