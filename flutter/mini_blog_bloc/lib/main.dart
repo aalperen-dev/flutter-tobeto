@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mini_blog/repositories/blog_repository.dart';
 import 'package:mini_blog/screens/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'blocs/blog/blog_bloc.dart';
 import 'themes/dark_theme.dart';
 import 'themes/light_theme.dart';
+
+//TODO: on'da değişken kullacağımız zaman. bu değişkeni event'damı tanımlıcaz state'demi?
 
 void main() {
   runApp(const MyApp());
@@ -36,19 +41,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'mini blog',
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: themeMode,
-      home: const HomePage(),
+    return BlocProvider(
+      create: (context) => BlogBloc(blogRepository: BlogRepository()),
+      child: MaterialApp(
+        title: 'mini blog',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: themeMode,
+        home: const HomePage(),
+      ),
     );
   }
 }
-
-// TODO: stream builder bakıcaz
-// TODO: pull to refresh bakıcaz
-// TODO: detail sayfası yapabiliriz
-// TODO: adaptive widget işlevi
-// TODO: hocaya sorulcak edit
-// TODO: hocaya sorulcak save
