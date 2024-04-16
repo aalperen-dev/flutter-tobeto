@@ -65,7 +65,7 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: blogModel.toMap(),
+      body: blogModel.toJson(),
     );
 
     if (response.statusCode == 200) {
