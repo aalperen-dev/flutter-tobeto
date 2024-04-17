@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:mini_blog/blocs/blog/blog_bloc.dart';
 import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/homepage.dart';
 
@@ -104,115 +106,135 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('AddBlog'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 20,
-          ),
-          child: Form(
-            key: _formKey, //key verilmesi şart
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    _pickImage();
-                  },
-                  child: const Text(
-                    "Foto Seç",
+    return BlocListener<BlogBloc, BlogState>(
+      listener: (context, state) async {
+        if (state is AddBlogSuccess) {
+          if (context.mounted) {
+            context.read<BlogBloc>().add(FetchAllBlogs());
+          }
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ));
+        }
+        if (state is AddBlogFailed && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ekleme Hatalı'),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('AddBlog'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+            child: Form(
+              key: _formKey, //key verilmesi şart
+              child: Column(
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      _pickImage();
+                    },
+                    child: const Text(
+                      "Foto Seç",
+                    ),
                   ),
-                ),
-                //
-                if (selectedImage != null)
-                  Image.file(
-                    height: 200,
-                    File(selectedImage!.path),
+                  //
+                  if (selectedImage != null)
+                    Image.file(
+                      height: 200,
+                      File(selectedImage!.path),
+                    ),
+                  // başlık
+                  TextFormField(
+                    // controller: controller,
+                    decoration: const InputDecoration(
+                      label: Text('Başlık - Title'),
+                    ),
+                    validator: (value) {
+                      //alanların şartlara uyup uymadığını kontrol eder
+                      if (value == null || value.isEmpty) {
+                        return 'Alan Boş Bırakılamaz!';
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      // print(newValue);
+                      blogTitle = newValue!;
+                    },
                   ),
-                // başlık
-                TextFormField(
-                  // controller: controller,
-                  decoration: const InputDecoration(
-                    label: Text('Başlık - Title'),
+                  // içerik
+                  TextFormField(
+                    minLines: 1,
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                      label: Text('İçerik - Content'),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Alan Boş Bırakılamaz!';
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      // print(newValue);
+                      blogContent = newValue!;
+                    },
                   ),
-                  validator: (value) {
-                    //alanların şartlara uyup uymadığını kontrol eder
-                    if (value == null || value.isEmpty) {
-                      return 'Alan Boş Bırakılamaz!';
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    // print(newValue);
-                    blogTitle = newValue!;
-                  },
-                ),
-                // içerik
-                TextFormField(
-                  minLines: 1,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    label: Text('İçerik - Content'),
+                  // yazar
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      label: Text('Yazar - Author'),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Alan Boş Bırakılamaz!';
+                      }
+                      return null;
+                    },
+                    onSaved: (newValue) {
+                      // print(newValue);
+                      blogAuthor = newValue!;
+                    },
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Alan Boş Bırakılamaz!';
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    // print(newValue);
-                    blogContent = newValue!;
-                  },
-                ),
-                // yazar
-                TextFormField(
-                  decoration: const InputDecoration(
-                    label: Text('Yazar - Author'),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (selectedImage != null) {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                        }
+
+                        context.read<BlogBloc>().add(
+                              AddBlog(
+                                  blogTitle: blogTitle,
+                                  blogContent: blogContent,
+                                  blogAuthor: blogAuthor,
+                                  imagePath: selectedImage!.path),
+                            );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Resim Seçmediniz'),
+                          ),
+                        );
+                      }
+
+                      // _submit(context);
+                    },
+                    child: const Text('Kaydet'),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Alan Boş Bırakılamaz!';
-                    }
-                    return null;
-                  },
-                  onSaved: (newValue) {
-                    // print(newValue);
-                    blogAuthor = newValue!;
-                  },
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                    }
-                    _submit(context);
-                  },
-                  child: const Text('Kaydet'),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // deneme
-          if (selectedImage != null) {
-            BlogModel postTest = BlogModel(
-              title: blogTitle,
-              content: blogContent,
-              thumbnail: selectedImage!.path,
-              author: blogAuthor,
-            );
-
-            await _submitTest(context, postTest);
-          }
-        },
-        child: const Icon(Icons.warning),
       ),
     );
   }

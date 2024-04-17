@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/homepage.dart';
+
+import '../blocs/blog/blog_bloc.dart';
 
 class EditScreen extends StatefulWidget {
   final BlogModel blogModel;
@@ -95,118 +98,126 @@ class _EditScreenState extends State<EditScreen> {
         centerTitle: true,
         title: const Text('Edit Blog'),
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey, //key verilmesi şart
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // resim
-                SizedBox(
-                  height: 200,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      Image.network(
-                        widget.blogModel.thumbnail,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: CircleAvatar(
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.mode_edit_outline_outlined,
-                              color: Colors.red,
+      body: BlocBuilder<BlogBloc, BlogState>(
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: Form(
+              key: _formKey, //key verilmesi şart
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // resim
+                    SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Image.network(
+                            widget.blogModel.thumbnail,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: CircleAvatar(
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(
+                                  Icons.mode_edit_outline_outlined,
+                                  color: Colors.red,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+
+                    // başlık - title
+                    TextFormField(
+                      // güncelleme controller ile
+                      // controller: titleController,
+
+                      // güncelleme - onsaved ile
+                      initialValue: widget.blogModel.title,
+                      onSaved: (newValue) {
+                        newTitle = newValue!;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('Başlık - Title'),
+                      ),
+                    ),
+
+                    // içerik
+                    TextFormField(
+                      // güncelleme controller ile
+                      // controller: contentController,
+
+                      // güncelleme - onsaved ile
+                      initialValue: widget.blogModel.content,
+                      onSaved: (newValue) {
+                        newContent = newValue!;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('İçerik - Content'),
+                      ),
+                    ),
+
+                    // yazar
+                    TextFormField(
+                      // güncelleme controller ile
+                      // controller: authorController,
+
+                      // güncelleme - onsaved ile
+                      initialValue: widget.blogModel.author,
+                      onSaved: (newValue) {
+                        newAuthor = newValue!;
+                      },
+                      decoration: const InputDecoration(
+                        label: Text('Yazar - Author'),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        // güncelleme - onsaved ile
+                        _formKey.currentState!.save();
+
+                        BlogModel updatedBlog = widget.blogModel.copyWith(
+                          title: newTitle,
+                          content: newContent,
+                          author: newAuthor,
+                        );
+
+                        // güncelleme - controller ile
+                        // BlogModel updatedBlog = widget.blogModel.copyWith(
+                        //   title: titleController.text,
+                        //   content: contentController.text,
+                        //   author: authorController.text,
+                        // );
+
+                        // if (kDebugMode) {
+                        //   print(updatedBlog);
+                        // }
+
+                        // await _update(context, updatedBlog);
+
+                        context
+                            .read<BlogBloc>()
+                            .add(UpdateBlog(blogModel: updatedBlog));
+                      },
+                      child: const Text('Güncelle!'),
+                    ),
+                  ],
                 ),
-
-                // başlık - title
-                TextFormField(
-                  // güncelleme controller ile
-                  // controller: titleController,
-
-                  // güncelleme - onsaved ile
-                  initialValue: widget.blogModel.title,
-                  onSaved: (newValue) {
-                    newTitle = newValue!;
-                  },
-                  decoration: const InputDecoration(
-                    label: Text('Başlık - Title'),
-                  ),
-                ),
-
-                // içerik
-                TextFormField(
-                  // güncelleme controller ile
-                  // controller: contentController,
-
-                  // güncelleme - onsaved ile
-                  initialValue: widget.blogModel.content,
-                  onSaved: (newValue) {
-                    newContent = newValue!;
-                  },
-                  decoration: const InputDecoration(
-                    label: Text('İçerik - Content'),
-                  ),
-                ),
-
-                // yazar
-                TextFormField(
-                  // güncelleme controller ile
-                  // controller: authorController,
-
-                  // güncelleme - onsaved ile
-                  initialValue: widget.blogModel.author,
-                  onSaved: (newValue) {
-                    newAuthor = newValue!;
-                  },
-                  decoration: const InputDecoration(
-                    label: Text('Yazar - Author'),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () async {
-                    // güncelleme - onsaved ile
-                    _formKey.currentState!.save();
-
-                    BlogModel updatedBlog = widget.blogModel.copyWith(
-                      title: newTitle,
-                      content: newContent,
-                      author: newAuthor,
-                    );
-
-                    // güncelleme - controller ile
-                    // BlogModel updatedBlog = widget.blogModel.copyWith(
-                    //   title: titleController.text,
-                    //   content: contentController.text,
-                    //   author: authorController.text,
-                    // );
-
-                    if (kDebugMode) {
-                      print(updatedBlog);
-                    }
-
-                    await _update(context, updatedBlog);
-                  },
-                  child: const Text('Güncelle!'),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

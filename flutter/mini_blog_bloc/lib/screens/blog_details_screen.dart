@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/edit_screen.dart';
+import 'package:mini_blog/screens/homepage.dart';
 
 import '../blocs/blog/blog_bloc.dart';
 
@@ -30,102 +31,115 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BlogBloc, BlogState>(
-      builder: (context, state) {
-        return Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        EditScreen(blogModel: widget.blogModel),
-                  ));
-                },
-                icon: const Icon(
-                  Icons.edit,
-                ),
-              ),
-              IconButton(
-                onPressed: () async {
-                  // _deletePost(
-                  //   context,
-                  //   widget.blogModel.id!,
-                  // );
+    return BlocListener<BlogBloc, BlogState>(
+      listener: (context, state) async {
+        if (state is DeleteBlogSuccess) {
+          if (context.mounted) {
+            context.read<BlogBloc>().add(FetchAllBlogs());
+          }
 
-                  context
-                      .read<BlogBloc>()
-                      .add(RemoveBlog(postId: widget.blogModel.id!));
-
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.delete_forever,
-                ),
-              ),
-            ],
-          ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // resim
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selected = !selected;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(seconds: 2),
-                      curve: Curves.fastOutSlowIn,
-                      height: selected
-                          ? MediaQuery.of(context).size.height - 200
-                          : 200,
-                      width: double.infinity,
-                      alignment: selected
-                          ? Alignment.center
-                          : AlignmentDirectional.topCenter,
-                      child: Image.network(
-                        widget.blogModel.thumbnail,
-                        fit: BoxFit.cover,
-
-                        // scale: 2.0,
-                      ),
-                    ),
-                  ),
-
-                  // başlık
-                  Text(
-                    widget.blogModel.title,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  // yazar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    child: Text(
-                      widget.blogModel.author,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  // içerik
-                  Text(
-                    widget.blogModel.content,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ));
+        }
+        if (state is DeleteBlogFailed && context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ekleme Hatalı'),
+            ),
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => EditScreen(blogModel: widget.blogModel),
+                ));
+              },
+              icon: const Icon(
+                Icons.edit,
               ),
             ),
+            IconButton(
+              onPressed: () async {
+                // _deletePost(
+                //   context,
+                //   widget.blogModel.id!,
+                // );
+                context
+                    .read<BlogBloc>()
+                    .add(DeleteBlog(postId: widget.blogModel.id!));
+                // Navigator.of(context).pop();
+              },
+              icon: const Icon(
+                Icons.delete_forever,
+              ),
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // resim
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selected = !selected;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.fastOutSlowIn,
+                    height: selected
+                        ? MediaQuery.of(context).size.height - 200
+                        : 200,
+                    width: double.infinity,
+                    alignment: selected
+                        ? Alignment.center
+                        : AlignmentDirectional.topCenter,
+                    child: Image.network(
+                      widget.blogModel.thumbnail,
+                      fit: BoxFit.cover,
+
+                      // scale: 2.0,
+                    ),
+                  ),
+                ),
+
+                // başlık
+                Text(
+                  widget.blogModel.title,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
+                // yazar
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                  ),
+                  child: Text(
+                    widget.blogModel.author,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                // içerik
+                Text(
+                  widget.blogModel.content,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

@@ -9,8 +9,13 @@ import 'themes/dark_theme.dart';
 import 'themes/light_theme.dart';
 
 //TODO: on'da değişken kullacağımız zaman. bu değişkeni event'damı tanımlıcaz state'demi?
+//TODO: context'i nerede alıcaz???
+//TODO: list sayfasına navigasyon yapınca bilinmedik durum diyor?
+//TODO: builder - listener nerelerde kullanacaz?
+//TODO: sealed - abstract class farkı
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

@@ -1,8 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mini_blog/repositories/blog_repository.dart';
 import '../../models/blog_model.dart';
-import 'package:http/http.dart' as http;
 
 part 'blog_event.dart';
 part 'blog_state.dart';
@@ -18,7 +18,7 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     // her bir event için on fonksiyonu yazılması lazım.
 
     // bütün datayı çekme
-    on<FetchBlogs>((event, emit) async {
+    on<FetchAllBlogs>((event, emit) async {
       emit(BlogLoading());
       try {
         final blogs = await blogRepository.fetchAllBlogs();
@@ -29,16 +29,41 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
     });
 
     // post silme
-    on<RemoveBlog>((event, emit) async {
+    on<DeleteBlog>((event, emit) async {
       try {
-        Uri url = Uri.parse(
-            "https://tobetoapi.halitkalayci.com/api/Articles/${event.postId}");
-        final http.Response response = await http.delete(url);
+        await blogRepository.deleteBlog(postId: event.postId);
 
-        if (response.statusCode == 200) {
-          print('başarılı');
-        } else {}
-      } catch (e) {}
+        emit(DeleteBlogSuccess());
+      } catch (e) {
+        emit(DeleteBlogFailed());
+      }
+    });
+
+    // blog ekleme
+    on<AddBlog>((event, emit) async {
+      try {
+        await blogRepository.submitBlog(
+          blogTitle: event.blogTitle,
+          blogContent: event.blogContent,
+          blogAuthor: event.blogAuthor,
+          imagePath: event.imagePath,
+        );
+
+        emit(AddBlogSuccess());
+      } catch (e) {
+        emit(AddBlogFailed());
+      }
+    });
+
+    // update blog
+    on<UpdateBlog>((event, emit) async {
+      try {
+        await blogRepository.updateBlog(blogModel: event.blogModel);
+
+        emit(UpdateBlogSuccess());
+      } catch (e) {
+        emit(UpdateBlogFailed());
+      }
     });
   }
 }
