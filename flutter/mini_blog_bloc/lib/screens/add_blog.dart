@@ -108,10 +108,9 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   Widget build(BuildContext context) {
     return BlocListener<BlogBloc, BlogState>(
       listener: (context, state) async {
-        if (state is AddBlogSuccess) {
-          if (context.mounted) {
-            context.read<BlogBloc>().add(FetchAllBlogs());
-          }
+        if (state is AddBlogSuccess && context.mounted) {
+          context.read<BlogBloc>().add(FetchAllBlogs());
+
           await Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => const HomePage(),
           ));
