@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:mini_blog/blocs/blog/blog_bloc.dart';
-import 'package:mini_blog/models/blog_model.dart';
+import 'package:mini_blog/bloc/blog/blog_bloc.dart';
 import 'package:mini_blog/screens/homepage.dart';
 
 class AddBlogScreen extends StatefulWidget {
@@ -25,71 +22,6 @@ class _AddBlogScreenState extends State<AddBlogScreen> {
   String blogContent = '';
   String blogAuthor = '';
   XFile? selectedImage;
-
-  Future<void> _submit(BuildContext context) async {
-    if (selectedImage != null) {
-      Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
-
-      var request = http.MultipartRequest('POST', url);
-      // içerik ekleme
-      request.fields['Title'] = blogTitle;
-      request.fields['Content'] = blogContent;
-      request.fields['Author'] = blogAuthor;
-
-      // dosya ekleme
-      final file =
-          await http.MultipartFile.fromPath('File', selectedImage!.path);
-      request.files.add(file);
-
-      // gönderme
-      final response = await request.send();
-
-      if (response.statusCode == 201) {
-        if (!context.mounted) return;
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
-      }
-    }
-  }
-
-  // 400 hatası veriyor. request body türü yok.
-  Future<void> _submitTest(
-    BuildContext context,
-    BlogModel blogModel,
-  ) async {
-    Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
-
-    http.Response response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: blogModel.toJson(),
-    );
-
-    if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print('Başarılı!!!');
-      }
-      if (context.mounted) {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Post Güncellendi!'),
-          ),
-        );
-      }
-    } else {
-      if (kDebugMode) {
-        print('Hata Kodu : ${response.statusCode}');
-      }
-    }
-  }
 
   // resim seçme
   Future<void> _pickImage() async {

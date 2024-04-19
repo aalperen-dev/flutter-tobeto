@@ -5,7 +5,7 @@ import 'package:mini_blog/models/blog_model.dart';
 import 'package:mini_blog/screens/edit_screen.dart';
 import 'package:mini_blog/screens/homepage.dart';
 
-import '../blocs/blog/blog_bloc.dart';
+import '../bloc/blog/blog_bloc.dart';
 
 class BlogDetailsScreen extends StatefulWidget {
   final BlogModel blogModel;
@@ -31,56 +31,60 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BlogBloc, BlogState>(
-      listener: (context, state) async {
-        if (state is DeleteBlogSuccess) {
-          if (context.mounted) {
-            context.read<BlogBloc>().add(FetchAllBlogs());
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => EditScreen(blogModel: widget.blogModel),
+              ));
+            },
+            icon: const Icon(
+              Icons.edit,
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              // _deletePost(
+              //   context,
+              //   widget.blogModel.id!,
+              // );
+
+              context
+                  .read<BlogBloc>()
+                  .add(DeleteBlog(postId: widget.blogModel.id!));
+
+              // Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.delete_forever,
+            ),
+          ),
+        ],
+      ),
+      body: BlocListener<BlogBloc, BlogState>(
+        listener: (context, state) async {
+          if (state is UpdateBlogSuccess) {
+            setState(() {});
           }
 
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ));
-        }
-        if (state is DeleteBlogFailed && context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Ekleme Hatalı'),
-            ),
-          );
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => EditScreen(blogModel: widget.blogModel),
-                ));
-              },
-              icon: const Icon(
-                Icons.edit,
+          if (state is DeleteBlogSuccess && context.mounted) {
+            context.read<BlogBloc>().add(FetchAllBlogs());
+
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const HomePage(),
+            ));
+          }
+          if (state is DeleteBlogFailed && context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Ekleme Hatalı'),
               ),
-            ),
-            IconButton(
-              onPressed: () async {
-                // _deletePost(
-                //   context,
-                //   widget.blogModel.id!,
-                // );
-                context
-                    .read<BlogBloc>()
-                    .add(DeleteBlog(postId: widget.blogModel.id!));
-                // Navigator.of(context).pop();
-              },
-              icon: const Icon(
-                Icons.delete_forever,
-              ),
-            ),
-          ],
-        ),
-        body: SingleChildScrollView(
+            );
+          }
+        },
+        child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: 10,

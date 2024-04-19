@@ -89,4 +89,29 @@ class BlogRepository {
       }
     }
   }
+
+  // 400 hatası veriyor.
+  // Future<void> _submitTest(
+  //   BlogModel blogModel,
+  // ) async {
+  //   Uri url = Uri.parse("https://tobetoapi.halitkalayci.com/api/Articles");
+
+  //   http.Response response = await http.post(
+  //     url,
+  //     headers: <String, String>{
+  //       'Content-Type': 'application/json; charset=UTF-8',
+  //     },
+  //     body: blogModel.toJson(),
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     if (kDebugMode) {
+  //       print('Başarılı!!!');
+  //     }
+  //   } else {
+  //     if (kDebugMode) {
+  //       print('Hata Kodu : ${response.statusCode}');
+  //     }
+  //   }
+  // }
 }

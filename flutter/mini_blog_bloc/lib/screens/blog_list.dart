@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../blocs/blog/blog_bloc.dart';
+import '../bloc/blog/blog_bloc.dart';
 import 'blog_details_screen.dart';
 
 class BlogList extends StatefulWidget {
@@ -29,6 +29,10 @@ class _BlogListState extends State<BlogList> {
           return const Center(
             child: CircularProgressIndicator(),
           );
+        }
+
+        if (state is UpdateBlogSuccess) {
+          context.read<BlogBloc>().add(FetchAllBlogs());
         }
 
         if (state is BlogLoaded) {

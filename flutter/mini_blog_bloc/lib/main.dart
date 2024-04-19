@@ -4,7 +4,7 @@ import 'package:mini_blog/repositories/blog_repository.dart';
 import 'package:mini_blog/screens/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'blocs/blog/blog_bloc.dart';
+import 'bloc/blog/blog_bloc.dart';
 import 'themes/dark_theme.dart';
 import 'themes/light_theme.dart';
 
