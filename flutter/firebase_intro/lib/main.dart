@@ -1,6 +1,9 @@
 import 'package:firebase_intro/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_intro/screens/auth.dart';
 import 'package:flutter/material.dart';
+
+//TODO: https://www.freecodecamp.org/news/user-authentication-flow-in-flutter-with-firebase-and-bloc/
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: const AuthScreen(),
     );
   }
 }
