@@ -5,20 +5,28 @@ sealed class AuthState {}
 
 final class AuthInitial extends AuthState {}
 
+// auth
 final class AuthLoading extends AuthState {
   final bool isLoading;
 
   AuthLoading({required this.isLoading});
 }
 
-final class AuthSuccess extends AuthState {
+// kayıt
+final class SignUpSuccess extends AuthState {
   final UserModel userModel;
 
-  AuthSuccess({required this.userModel});
+  SignUpSuccess({required this.userModel});
 }
 
-final class AuthFailure extends AuthState {
-  final String errorMessage;
+final class SignUpFailure extends AuthState {}
 
-  AuthFailure({required this.errorMessage});
-}
+// giriş
+class SignInUserSuccess extends AuthState {}
+
+class SignInUserFailure extends AuthState {}
+
+// çıkış
+class SignOutUserSuccess extends AuthState {}
+
+class SignOutUserFailure extends AuthState {}

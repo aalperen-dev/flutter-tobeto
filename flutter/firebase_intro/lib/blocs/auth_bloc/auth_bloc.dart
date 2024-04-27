@@ -1,17 +1,18 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:firebase_intro/models/user_model.dart';
 import 'package:firebase_intro/services/auth_service.dart';
-import 'package:meta/meta.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthService authService = AuthService();
+  final AuthService authService;
 
-  AuthBloc() : super(AuthInitial()) {
-    on<AuthEvent>((event, emit) {});
-
+  AuthBloc({
+    required this.authService,
+  }) : super(AuthInitial()) {
     on<SignUpUser>((event, emit) async {
       emit(AuthLoading(isLoading: true));
 
@@ -22,27 +23,47 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
 
         if (userModel != null) {
-          emit(AuthSuccess(userModel: userModel));
+          emit(SignUpSuccess(userModel: userModel));
         } else {
-          emit(AuthFailure(errorMessage: 'Create User Failed'));
+          emit(SignUpFailure());
         }
       } catch (e) {
-        print(e.toString());
+        if (kDebugMode) {
+          print(e.toString());
+        }
       }
 
       emit(AuthLoading(isLoading: false));
     });
 
-    on<SignOut>(
+    on<SignInUser>(
       (event, emit) {
         emit(AuthLoading(isLoading: true));
+        try {
+          authService.signInUser(event.email, event.password);
+          emit(SignInUserSuccess());
+        } catch (e) {
+          if (kDebugMode) {
+            print(e.toString());
+          }
+          emit(SignInUserFailure());
+        }
 
+        emit(AuthLoading(isLoading: false));
+      },
+    );
+
+    on<SignOutUser>(
+      (event, emit) {
         try {
           authService.signOutUser();
+          emit(SignOutUserSuccess());
         } catch (e) {
-          print(e.toString());
+          if (kDebugMode) {
+            print(e.toString());
+          }
+          emit(SignOutUserFailure());
         }
-        emit(AuthLoading(isLoading: false));
       },
     );
   }

@@ -1,7 +1,11 @@
 import 'package:firebase_intro/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_intro/screens/auth.dart';
+import 'package:firebase_intro/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'blocs/auth_bloc/auth_bloc.dart';
 
 //TODO: https://www.freecodecamp.org/news/user-authentication-flow-in-flutter-with-firebase-and-bloc/
 
@@ -19,12 +23,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (context) => AuthBloc(authService: AuthService()),
+      child: MaterialApp(
+        title: 'Firebase',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const AuthScreen(),
       ),
-      home: const AuthScreen(),
     );
   }
 }
