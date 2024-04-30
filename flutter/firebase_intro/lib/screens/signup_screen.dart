@@ -16,6 +16,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKeySignUp = GlobalKey<FormState>();
   String _email = '';
   String _name = '';
+  String _lastname = '';
   String _password = '';
 
   @override
@@ -57,6 +58,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       onSaved: (newValue) {
                         _name = newValue!;
+                      },
+                    ),
+                    // lastname
+                    TextFormField(
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        labelText: 'Soyisim girin',
+                      ),
+                      onSaved: (newValue) {
+                        _lastname = newValue!;
                       },
                     ),
                     // password

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'blocs/auth_bloc/auth_bloc.dart';
 
 //TODO: https://www.freecodecamp.org/news/user-authentication-flow-in-flutter-with-firebase-and-bloc/
+//TODO: hata mesajı döndürme.
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
