@@ -1,38 +1,32 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UserModel {
   final String? uid;
   final String? email;
+  final String? photoUrl;
   final String? firstName;
   final String? lastName;
-  final String? photoUrl;
-  final Timestamp? createdAt;
   UserModel({
     this.uid,
     this.email,
+    this.photoUrl,
     this.firstName,
     this.lastName,
-    this.photoUrl,
-    this.createdAt,
   });
 
   UserModel copyWith({
     String? uid,
     String? email,
+    String? photoUrl,
     String? firstName,
     String? lastName,
-    String? photoUrl,
-    Timestamp? createdAt,
   }) {
     return UserModel(
       uid: uid ?? this.uid,
       email: email ?? this.email,
+      photoUrl: photoUrl ?? this.photoUrl,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
-      photoUrl: photoUrl ?? this.photoUrl,
-      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -40,10 +34,9 @@ class UserModel {
     return {
       'uid': uid,
       'email': email,
+      'photoUrl': photoUrl,
       'firstName': firstName,
       'lastName': lastName,
-      'photoUrl': photoUrl,
-      'createdAt': createdAt,
     };
   }
 
@@ -51,10 +44,9 @@ class UserModel {
     return UserModel(
       uid: map['uid'],
       email: map['email'],
+      photoUrl: map['photoUrl'],
       firstName: map['firstName'],
       lastName: map['lastName'],
-      photoUrl: map['photoUrl'],
-      createdAt: map['createdAt'],
     );
   }
 
@@ -65,7 +57,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(uid: $uid, email: $email, firstName: $firstName, lastName: $lastName, photoUrl: $photoUrl, createdAt: $createdAt)';
+    return 'UserModel(uid: $uid, email: $email, photoUrl: $photoUrl, firstName: $firstName, lastName: $lastName)';
   }
 
   @override
@@ -75,19 +67,17 @@ class UserModel {
     return other is UserModel &&
         other.uid == uid &&
         other.email == email &&
-        other.firstName == firstName &&
-        other.lastName == lastName &&
         other.photoUrl == photoUrl &&
-        other.createdAt == createdAt;
+        other.firstName == firstName &&
+        other.lastName == lastName;
   }
 
   @override
   int get hashCode {
     return uid.hashCode ^
         email.hashCode ^
-        firstName.hashCode ^
-        lastName.hashCode ^
         photoUrl.hashCode ^
-        createdAt.hashCode;
+        firstName.hashCode ^
+        lastName.hashCode;
   }
 }

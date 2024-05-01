@@ -1,12 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_intro/models/user_model.dart';
 import 'package:flutter/foundation.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   // sign up
-  Future<UserModel?> signUpUser(
+  Future<String> signUpUser(
     String email,
     String password,
   ) async {
@@ -20,15 +19,14 @@ class AuthService {
       final User? firebaseUser = userCredential.user;
 
       if (firebaseUser != null) {
-        return UserModel(
-            uid: firebaseUser.uid, email: firebaseUser.email ?? '');
+        return firebaseUser.uid;
       }
     } on FirebaseAuthException catch (e) {
       if (kDebugMode) {
         print(e.code);
       }
     }
-    return null;
+    return '';
   }
 
   Future<void> signInUser(

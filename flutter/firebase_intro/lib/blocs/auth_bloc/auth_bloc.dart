@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:firebase_intro/models/user_model.dart';
 import 'package:firebase_intro/services/auth_service.dart';
 
 part 'auth_event.dart';
@@ -17,20 +15,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading(isLoading: true));
 
       try {
-        final UserModel? userModel = await authService.signUpUser(
+        String uid = await authService.signUpUser(
           event.email,
           event.password,
         );
-
-        if (userModel != null) {
-          emit(SignUpSuccess(userModel: userModel));
-        } else {
-          emit(SignUpFailure());
-        }
+        emit(SignUpSuccess(uid: uid));
       } catch (e) {
         if (kDebugMode) {
           print(e.toString());
         }
+        emit(SignUpFailure());
       }
 
       emit(AuthLoading(isLoading: false));

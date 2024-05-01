@@ -14,9 +14,9 @@ final class AuthLoading extends AuthState {
 
 // kayıt
 final class SignUpSuccess extends AuthState {
-  final UserModel userModel;
+  final String uid;
 
-  SignUpSuccess({required this.userModel});
+  SignUpSuccess({required this.uid});
 }
 
 final class SignUpFailure extends AuthState {}
