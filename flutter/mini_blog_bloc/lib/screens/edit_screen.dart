@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:mini_blog/models/blog_model.dart';
-import 'package:mini_blog/screens/blog_details_screen.dart';
+
 import 'package:mini_blog/screens/homepage.dart';
 
 import '../bloc/blog/blog_bloc.dart';
 
 class EditScreen extends StatefulWidget {
-  final BlogModel blogModel;
+  // final BlogModel? blogModel;
   const EditScreen({
     super.key,
-    required this.blogModel,
+    // this.blogModel,
   });
 
   @override
@@ -94,20 +94,19 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<BlogBloc, BlogState>(
-      listener: (context, state) async {
+    final blogModel = ModalRoute.of(context)?.settings.arguments as BlogModel;
+
+    return BlocConsumer<BlogBloc, BlogState>(
+      listener: (_, state) async {
         if (state is UpdateBlogSuccess && context.mounted) {
           context.read<BlogBloc>().add(FetchAllBlogs());
 
-          await Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) =>
-                  BlogDetailsScreen(blogModel: widget.blogModel),
-            ),
-          );
+          // await Future.delayed(const Duration(seconds: 5));
+
+          Navigator.of(_).pop();
         }
       },
-      child: Scaffold(
+      builder: (context, state) => Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Edit Blog'),
@@ -128,7 +127,7 @@ class _EditScreenState extends State<EditScreen> {
                     child: Stack(
                       children: [
                         Image.network(
-                          widget.blogModel.thumbnail,
+                          blogModel.thumbnail,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -155,7 +154,7 @@ class _EditScreenState extends State<EditScreen> {
                     // controller: titleController,
 
                     // güncelleme - onsaved ile
-                    initialValue: widget.blogModel.title,
+                    initialValue: blogModel.title,
                     onSaved: (newValue) {
                       newTitle = newValue!;
                     },
@@ -170,7 +169,7 @@ class _EditScreenState extends State<EditScreen> {
                     // controller: contentController,
 
                     // güncelleme - onsaved ile
-                    initialValue: widget.blogModel.content,
+                    initialValue: blogModel.content,
                     onSaved: (newValue) {
                       newContent = newValue!;
                     },
@@ -185,7 +184,7 @@ class _EditScreenState extends State<EditScreen> {
                     // controller: authorController,
 
                     // güncelleme - onsaved ile
-                    initialValue: widget.blogModel.author,
+                    initialValue: blogModel.author,
                     onSaved: (newValue) {
                       newAuthor = newValue!;
                     },
@@ -199,7 +198,7 @@ class _EditScreenState extends State<EditScreen> {
                       // güncelleme - onsaved ile
                       _formKey.currentState!.save();
 
-                      BlogModel updatedBlog = widget.blogModel.copyWith(
+                      BlogModel updatedBlog = blogModel.copyWith(
                         title: newTitle,
                         content: newContent,
                         author: newAuthor,

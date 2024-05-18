@@ -8,11 +8,11 @@ import 'package:mini_blog/screens/homepage.dart';
 import '../bloc/blog/blog_bloc.dart';
 
 class BlogDetailsScreen extends StatefulWidget {
-  final BlogModel blogModel;
+  // final BlogModel blogModel;
 
   const BlogDetailsScreen({
     super.key,
-    required this.blogModel,
+    // required this.blogModel,
   });
 
   @override
@@ -31,14 +31,17 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final blogModel = ModalRoute.of(context)?.settings.arguments as BlogModel;
+
     return Scaffold(
       appBar: AppBar(
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => EditScreen(blogModel: widget.blogModel),
-              ));
+              // geçici çözüm
+
+              Navigator.of(context)
+                  .pushReplacementNamed('edit', arguments: blogModel);
             },
             icon: const Icon(
               Icons.edit,
@@ -51,9 +54,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
               //   widget.blogModel.id!,
               // );
 
-              context
-                  .read<BlogBloc>()
-                  .add(DeleteBlog(postId: widget.blogModel.id!));
+              context.read<BlogBloc>().add(DeleteBlog(postId: blogModel.id!));
 
               // Navigator.of(context).pop();
             },
@@ -110,7 +111,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                         ? Alignment.center
                         : AlignmentDirectional.topCenter,
                     child: Image.network(
-                      widget.blogModel.thumbnail,
+                      blogModel.thumbnail,
                       fit: BoxFit.cover,
 
                       // scale: 2.0,
@@ -120,7 +121,7 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
 
                 // başlık
                 Text(
-                  widget.blogModel.title,
+                  blogModel.title,
                   style: Theme.of(context).textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),
@@ -130,13 +131,13 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                     vertical: 10,
                   ),
                   child: Text(
-                    widget.blogModel.author,
+                    blogModel.author,
                     textAlign: TextAlign.center,
                   ),
                 ),
                 // içerik
                 Text(
-                  widget.blogModel.content,
+                  blogModel.content,
                   textAlign: TextAlign.center,
                 ),
               ],

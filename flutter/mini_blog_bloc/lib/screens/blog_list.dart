@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../bloc/blog/blog_bloc.dart';
-import 'blog_details_screen.dart';
 
 class BlogList extends StatefulWidget {
   const BlogList({super.key});
@@ -47,12 +45,8 @@ class _BlogListState extends State<BlogList> {
                 itemCount: state.blogs.length,
                 itemBuilder: (context, index) => ListTile(
                   onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            BlogDetailsScreen(blogModel: state.blogs[index]),
-                      ),
-                    );
+                    Navigator.pushNamed(context, 'details',
+                        arguments: state.blogs[index]);
                   },
                   leading: Image.network(
                     state.blogs[index].thumbnail,
