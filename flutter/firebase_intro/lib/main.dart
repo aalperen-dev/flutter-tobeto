@@ -1,3 +1,4 @@
+import 'package:firebase_intro/alperen_blog/blog_card.dart';
 import 'package:firebase_intro/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_intro/proje_test/goruntule_ekran.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const TakvimEkrani(),
+        home: const BlogCard(),
       ),
     );
   }
