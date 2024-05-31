@@ -40,9 +40,9 @@ class _TakvimEkraniState extends State<TakvimEkrani> {
 
     var querySnapshot =
         await FirebaseFirestore.instance.collection('events').get();
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       events.add(EventModel.fromMap(doc.data()));
-    });
+    }
     return events;
   }
 

@@ -1,21 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_intro/alperen_blog/blog_fake_data.dart';
+import 'package:firebase_intro/alperen_blog/blog_model.dart';
 
-class BlogCard extends StatelessWidget {
-  const BlogCard({super.key});
+class BlogCardDesign extends StatelessWidget {
+  const BlogCardDesign({super.key});
 
   @override
   Widget build(BuildContext context) {
-    String resimUrl =
-        'https://images.unsplash.com/photo-1715630914630-145eff95062b?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8';
-
     return Scaffold(
       appBar: AppBar(),
-      body: Container(
+      body: BlogCard(
+        blogModel: fakeBlog,
+        onTap: () {},
+      ),
+    );
+  }
+}
+
+//TODO: başık ve içerik stillendirilecek
+class BlogCard extends StatelessWidget {
+  final Function()? onTap;
+  final BlogModel blogModel;
+  const BlogCard({
+    super.key,
+    this.onTap,
+    required this.blogModel,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
         padding: const EdgeInsets.all(20),
         height: 450,
         width: 300,
         decoration: BoxDecoration(
-          color: Colors.red,
           borderRadius: BorderRadius.circular(25),
           // border: Border.all(),
         ),
@@ -28,13 +48,13 @@ class BlogCard extends StatelessWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.green,
-                borderRadius: BorderRadius.all(
+                borderRadius: const BorderRadius.all(
                   Radius.circular(25),
                 ),
                 image: DecorationImage(
                   fit: BoxFit.cover,
                   image: NetworkImage(
-                    resimUrl,
+                    blogModel.blogThumbnailUrl,
                   ),
                 ),
               ),
@@ -45,17 +65,23 @@ class BlogCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Tarih',
-                    style: TextStyle(color: Colors.grey),
+                  // tarih
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      blogModel.blogCreatedAt.toString(),
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                   ),
+                  // başlık
                   Text(
-                    'Başlık' * 40,
+                    blogModel.blogTitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
+                  // içerik
                   Text(
-                    'text ' * 50,
+                    blogModel.blogContent,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
                   ),
