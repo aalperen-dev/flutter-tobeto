@@ -54,11 +54,16 @@ class _TakvimEkraniState extends State<TakvimEkrani> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          DateTime? pickedDate = await showDatePicker(
+              context: context,
+              firstDate: DateTime.now(),
+              lastDate: DateTime.utc(2024, 12, 31));
+
           EventModel deneme = EventModel(
             id: 'id',
             title: 'deneme',
             description: 'deneme',
-            eventDate: DateTime.now(),
+            eventDate: pickedDate!,
           );
 
           await FirebaseFirestore.instance
